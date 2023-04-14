@@ -5,6 +5,7 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  IsStrongPassword,
   Matches,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
@@ -29,6 +30,13 @@ export class CreateUserDto {
 
   @ApiProperty({ required: true })
   @IsString()
+  @IsStrongPassword()
+  @IsNotEmpty()
+  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[*.!@#$%^&(){}:;,=]).{8,32}$/)
+  password: string;
+
+  @ApiProperty({ required: true })
+  @IsString()
   city: string;
 
   @ApiProperty({ required: true })
@@ -39,6 +47,7 @@ export class CreateUserDto {
 export class UpdateUserDto {
   @ApiProperty({ required: false })
   @IsString()
+  @IsOptional()
   name: string;
 
   @ApiProperty({ required: false })
@@ -46,11 +55,13 @@ export class UpdateUserDto {
   @IsOptional()
   age: number;
 
-  @ApiProperty()
+  @ApiProperty({ required: false })
   @IsString()
+  @IsOptional()
   city: string;
 
-  @ApiProperty()
+  @ApiProperty({ required: false })
   @IsBoolean()
+  @IsOptional()
   status: boolean;
 }
