@@ -7,6 +7,8 @@ import {
   IsString,
   IsStrongPassword,
   Matches,
+  Max,
+  Min,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -19,13 +21,15 @@ export class CreateUserDto {
   @ApiProperty({ required: false })
   @IsNumber()
   @IsOptional()
+  @Max(130)
+  @Min(18)
   age: number;
 
   @ApiProperty({ required: true, example: 'user@gmail.com' })
   @IsString()
   @IsEmail()
   @IsNotEmpty()
-  @Matches(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)
+  @Matches(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/)
   email: string;
 
   @ApiProperty({ required: true })
