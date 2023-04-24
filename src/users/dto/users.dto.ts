@@ -41,11 +41,28 @@ export class CreateUserDto {
 
   @ApiProperty({ required: true })
   @IsString()
+  @IsOptional()
   city: string;
 
+  @ApiProperty({ required: false })
+  @IsString()
+  @IsOptional()
+  avatar: string;
+
   @ApiProperty({ required: true })
+  @IsOptional()
   @IsBoolean()
   status: boolean;
+
+  @ApiProperty({ required: false })
+  @IsString()
+  @IsOptional()
+  createdAt;
+
+  @ApiProperty({ required: false })
+  @IsString()
+  @IsOptional()
+  updatedAt;
 }
 
 export class UpdateUserDto {
@@ -58,6 +75,11 @@ export class UpdateUserDto {
   @IsNumber()
   @IsOptional()
   age: number;
+
+  @ApiProperty({ required: false })
+  @IsString()
+  @IsOptional()
+  avatar: string;
 
   @ApiProperty({ required: false })
   @IsString()
