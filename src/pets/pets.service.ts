@@ -4,6 +4,7 @@ import { v4 as uuIdv4 } from 'uuid';
 import { CreatePetDto } from './dto/pets.dto';
 import { PrismaService } from '../core/orm/prisma.service';
 import { UsersService } from '../users/users.service';
+import { IPet } from '../core/constants/pet.interface';
 
 @Injectable()
 export class PetsService {
@@ -16,8 +17,8 @@ export class PetsService {
     return await this.prismaService.pet.findMany();
   }
 
-  async createPet(petData: CreatePetDto, userId: string) {
-    const user = await this.userService.getById(userId);
+  async createPet(petData: CreatePetDto, id: string) {
+    const user = await this.userService.getById(id);
 
     if (!user) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
@@ -48,15 +49,31 @@ export class PetsService {
     return user;
   }
 
-  async update(petData: any, userId: string): Promise<void> {
-    const user = await this.userService.getById(userId);
+  async getById(id: string): Promise<IPet> {
+    return await this.prismaService.pet.findFirst({
+      where: { id },
+    });
+  }
 
-    if (!user) {
-      throw new HttpException(
-        `User with ${userId} not exist`,
-        HttpStatus.NOT_FOUND,
-      );
-    }
-    await this.prismaService.pet.update(petData);
+  async update(
+    petData: any,
+    petId: string,
+    // userId: string,
+  ): Promise<IPet> {
+    // const user = await this.userService.getById(userId);
+    // console.log('userId', userId);
+    // if (!user) {
+    //   throw new HttpException(
+    //     `User with ${userId} not exist`,
+    //     HttpStatus.NOT_FOUND,
+    //   );
+    // }
+
+    return await this.prismaService.pet.update({
+      where: { id: petId },
+      data: {
+        ...petData,
+      },
+    });
   }
 }

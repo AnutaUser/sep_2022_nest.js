@@ -2,9 +2,10 @@ import {
   Body,
   Controller,
   Delete,
+  forwardRef,
   Get,
-  HttpException,
   HttpStatus,
+  Inject,
   Param,
   Patch,
   Post,
@@ -23,11 +24,13 @@ import { editFileName, imgFileFilter } from '../core/file-upload/file-upload';
 import { PetsService } from '../pets/pets.service';
 import { CreatePetDto } from '../pets/dto/pets.dto';
 
-@ApiTags('users')
+@ApiTags('Users')
 @Controller('users')
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
+
+    @Inject(forwardRef(() => PetsService))
     private readonly petsService: PetsService,
   ) {}
 
@@ -85,25 +88,24 @@ export class UsersController {
     res.status(HttpStatus.OK).json(updUser);
   }
 
-  @ApiParam({ name: 'userId', required: true })
-  @Post('/animals/:userId')
+  @ApiParam({ name: 'id', required: true })
+  @Post('/animals/:id')
   async addPet(
     @Req() req: any,
     @Body() body: CreatePetDto,
     @Res() res: any,
-    @Param('userId') userId: string,
+    @Param('id') id: string,
   ) {
-    const user = await this.usersService.getById(userId);
-    console.log(user);
-    if (!user) {
-      throw new HttpException(
-        `User with ${userId} not found`,
-        HttpStatus.NOT_FOUND,
-      );
+    const user = await this.usersService.getById(id);
 
+    if (!user) {
       return res
-        .status(HttpStatus.CREATED)
-        .json(await this.petsService.createPet(body, userId));
+        .status(HttpStatus.NOT_FOUND)
+        .json({ message: `User with id: ${id} not found` });
     }
+
+    return res
+      .status(HttpStatus.OK)
+      .json(await this.petsService.createPet(body, id));
   }
 }

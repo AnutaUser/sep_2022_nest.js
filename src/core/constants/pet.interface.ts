@@ -7,6 +7,6 @@ export interface IPet {
   image: string;
   logo: string;
   status: boolean;
-  owner: IUser;
-  ownerId: string;
+  owner?: IUser;
+  ownerId?: string;
 }

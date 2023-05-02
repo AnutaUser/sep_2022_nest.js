@@ -31,6 +31,12 @@ export class UsersService {
     });
   }
 
+  async findOne(email: string): Promise<IUser> {
+    return await this.prismaService.user.findFirst({
+      where: { email },
+    });
+  }
+
   async createUser(userData: CreateUserDto): Promise<IUser> {
     return this.prismaService.user.create({
       data: {
@@ -43,7 +49,10 @@ export class UsersService {
   async updateUser(userId: string, userData: UpdateUserDto): Promise<void> {
     await this.prismaService.user.update({
       where: { id: userId },
-      data: userData,
+      data: {
+        ...userData,
+        updatedAt: new Date(),
+      },
     });
   }
 

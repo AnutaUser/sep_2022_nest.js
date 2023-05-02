@@ -13,14 +13,14 @@ import {
 } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiParam, ApiTags } from '@nestjs/swagger';
 
 import { CreatePetDto, UpdatePetDto } from './dto/pets.dto';
 import { PetsService } from './pets.service';
 import { editFileName, imgFileFilter } from '../core/file-upload/file-upload';
 import { IPet } from '../core/constants/pet.interface';
 
-@ApiTags('pets')
+@ApiTags('Pets')
 @Controller('pets')
 export class PetsController {
   constructor(private readonly petsService: PetsService) {}
@@ -38,11 +38,24 @@ export class PetsController {
 
   @Get()
   async getAll(@Req() req: any, @Body() body: IPet[], @Res() res: any) {
-    const pet = await this.petsService.getAll();
-    res.status(HttpStatus.CREATED).json(pet);
+    const pets = await this.petsService.getAll();
+    res.status(HttpStatus.OK).json(pets);
   }
 
-  @Patch()
+  @ApiParam({ name: 'id', required: true })
+  @Get('/:id')
+  async getById(
+    @Req() req: any,
+    @Body() body: IPet,
+    @Res() res: any,
+    @Param('id') id: string,
+  ) {
+    const pet = await this.petsService.getById(id);
+    res.status(HttpStatus.OK).json(pet);
+  }
+
+  @ApiParam({ name: 'id', required: true })
+  @Patch('/:id')
   @UseInterceptors(
     FileFieldsInterceptor(
       [
@@ -62,7 +75,7 @@ export class PetsController {
     @Req() req: any,
     @Body() body: UpdatePetDto,
     @Res() res: any,
-    @Param() ownerId: string,
+    @Param('id') id: string,
     // @UploadedFiles() files: Array<Express.Multer.File>,
     @UploadedFiles()
     files: {
@@ -70,16 +83,15 @@ export class PetsController {
       logo?: Array<Express.Multer.File[]>;
     },
   ) {
-    console.log(files);
     if (files?.image) {
-      body.image = `public/animals/${files[0].filename}`;
+      body.image = `public/animals/${files[0]}.filename`;
     }
 
     if (files?.logo) {
-      body.logo = `public/animals/${files[0].filename}`;
+      body.logo = `public/animals/${files[0]}.filename`;
     }
 
-    const pet = await this.petsService.update(body, ownerId);
+    const pet = await this.petsService.update(body, id);
     res.status(HttpStatus.OK).json(pet);
   }
 }

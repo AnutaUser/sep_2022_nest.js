@@ -29,14 +29,13 @@ export class CreateUserDto {
   @IsString()
   @IsEmail()
   @IsNotEmpty()
-  @Matches(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/)
   email: string;
 
   @ApiProperty({ required: true })
   @IsString()
   @IsStrongPassword()
   @IsNotEmpty()
-  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[*.!@#$%^&(){}:;,=]).{8,32}$/)
+  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[*.!@#$%^&(){}:;,=]).{8,50}$/)
   password: string;
 
   @ApiProperty({ required: true })
@@ -90,4 +89,9 @@ export class UpdateUserDto {
   @IsBoolean()
   @IsOptional()
   status: boolean;
+  //
+  // @ApiProperty({ required: false })
+  // @IsString()
+  // @IsOptional()
+  // updatedAt;
 }
