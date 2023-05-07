@@ -4,5 +4,7 @@ config();
 
 export const configs = {
   PORT: process.env.PORT,
-  JWT_TOKEN_SECRET_KEY: process.env.TOKEN_SECRET_KEY,
+
+  JWT_TOKEN_SECRET: process.env.JWT_TOKEN_SECRET,
+  JWT_TOKEN_EXPIRES_IN: process.env.JWT_TOKEN_EXPIRES_IN,
 };
