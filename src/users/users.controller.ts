@@ -12,6 +12,7 @@ import {
   Req,
   Res,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiParam, ApiTags } from '@nestjs/swagger';
@@ -23,6 +24,7 @@ import { UsersService } from './users.service';
 import { editFileName, imgFileFilter } from '../core/file-upload/file-upload';
 import { PetsService } from '../pets/pets.service';
 import { CreatePetDto } from '../pets/dto/pets.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('Users')
 @Controller('users')
@@ -34,6 +36,7 @@ export class UsersController {
     private readonly petsService: PetsService,
   ) {}
 
+  @UseGuards(AuthGuard())
   @Get()
   async getUsersList(@Req() req: any, @Res() res: any) {
     const users = await this.usersService.getUsersList();

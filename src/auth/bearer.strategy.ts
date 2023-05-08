@@ -8,7 +8,7 @@ import { UsersService } from '../users/users.service';
 import { IUser } from '../core/constants/user.interface';
 
 @Injectable()
-export class BearerStrategy extends PassportStrategy(Strategy) {
+export class BearerStrategy extends PassportStrategy(Strategy, 'bearer') {
   constructor(
     private authService: AuthService,
     private jwtService: JwtService,

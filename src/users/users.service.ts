@@ -8,6 +8,8 @@ import { IUser } from '../core/constants/user.interface';
 
 @Injectable()
 export class UsersService {
+  private salt = 10;
+
   constructor(private readonly prismaService: PrismaService) {}
 
   async getUsersList(): Promise<IUser[]> {
@@ -39,7 +41,7 @@ export class UsersService {
   }
 
   async createUser(userData: CreateUserDto): Promise<IUser> {
-    const hash = await bcrypt.hash(userData.password, 8);
+    const hash = await bcrypt.hash(userData.password, this.salt);
 
     return this.prismaService.user.create({
       data: {
